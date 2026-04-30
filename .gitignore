@@ -1,6 +1,0 @@
-.DS_Store
-.Trashes
-build/
-cmake-build-*/
-*.key
-*.o
