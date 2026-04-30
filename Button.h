@@ -44,6 +44,13 @@ public:
     // Проверка, находится ли точка внутри кнопки
     bool contains(const sf::Vector2f& point) const;
     
+    // Добавить публичные методы
+    void setEnabled(bool enabled);
+    bool isEnabled() const;
+
+    // Добавить метод для установки цвета отключённой кнопки
+    void setDisabledColor(const sf::Color& color);
+
     // Получение размеров
     sf::Vector2f getSize() const;
     sf::Vector2f getPosition() const;
@@ -54,11 +61,15 @@ private:
     {
         Normal,   // Обычное состояние
         Hover,    // Наведение мыши
-        Pressed   // Нажата
+        Pressed,   // Нажата
+        Disabled //больше не работает
     };
     
     State m_state;
     
+    bool m_enabled = true;
+    sf::Color m_disabledColor = sf::Color(128, 128, 128);
+
     // Графические компоненты
     sf::RectangleShape m_shape;      // Форма кнопки
     sf::Text m_text;                 // Текст на кнопке

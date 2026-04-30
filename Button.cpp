@@ -11,7 +11,7 @@ Button::Button(sf::Texture& texture, const std::string& text,
     , m_pressedColor(sf::Color(50, 100, 150))   // Темнее
 {
     // Настройка формы кнопки
-    m_shape.setSize(sf::Vector2f(200, 50));
+    m_shape.setSize(sf::Vector2f(50, 35));
     m_shape.setFillColor(m_normalColor);
     m_shape.setOutlineColor(sf::Color::White);
     m_shape.setOutlineThickness(2.0f);
@@ -71,6 +71,7 @@ void Button::setOnClick(std::function<void()> callback)
 
 void Button::handleEvent(const sf::Event& event, const sf::RenderWindow& window)
 {
+    if (!m_enabled) return;
     // Получаем позицию мыши в координатах окна
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     sf::Vector2f mousePosF(static_cast<float>(mousePos.x), 
@@ -78,7 +79,7 @@ void Button::handleEvent(const sf::Event& event, const sf::RenderWindow& window)
     
     // Проверяем, находится ли мышь над кнопкой
     bool mouseOver = contains(mousePosF);
-    
+   
     // Обработка событий мыши
     if (event.is<sf::Event::MouseMoved>())
     {
@@ -135,9 +136,29 @@ void Button::handleEvent(const sf::Event& event, const sf::RenderWindow& window)
     }
 }
 
+void Button::setEnabled(bool enabled) {
+    m_enabled = enabled;
+    if (!enabled) {
+        m_state = State::Disabled;
+        updateColor();
+    } else {
+        m_state = State::Normal;
+        updateColor();
+    }
+}
+
+bool Button::isEnabled() const {
+    return m_enabled;
+}
+
+void Button::setDisabledColor(const sf::Color& color) {
+    m_disabledColor = color;
+    if (!m_enabled) updateColor();
+}
+
 void Button::update(const sf::RenderWindow& window)
 {
-    // Обновление состояния при движении мыши (если окно не в фокусе)
+    if (!m_enabled) return;
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     sf::Vector2f mousePosF(static_cast<float>(mousePos.x), 
                           static_cast<float>(mousePos.y));
@@ -173,10 +194,8 @@ sf::Vector2f Button::getPosition() const
     return m_shape.getPosition();
 }
 
-void Button::updateColor()
-{
-    switch (m_state)
-    {
+void Button::updateColor() {
+    switch (m_state) {
         case State::Normal:
             m_shape.setFillColor(m_normalColor);
             break;
@@ -185,6 +204,9 @@ void Button::updateColor()
             break;
         case State::Pressed:
             m_shape.setFillColor(m_pressedColor);
+            break;
+        case State::Disabled:
+            m_shape.setFillColor(m_disabledColor);
             break;
     }
 }

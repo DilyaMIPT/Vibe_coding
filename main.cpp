@@ -332,140 +332,166 @@ int main()
     int clickCount27 = 0;
     
     
-    button1.setOnClick([&clickCount1]() {
-        clickCount1++;
-        std::cout << "Кнопка 1 нажата! Счетчик: " << clickCount1 << std::endl;
-    });
-    
-    button2.setOnClick([&clickCount2]() {
-        clickCount2++;
-        std::cout << "Кнопка 2 нажата! Счетчик: " << clickCount2 << std::endl;
-    });
-    
-    button3.setOnClick([&clickCount3]() {
-        clickCount3++;
-        std::cout << "Кнопка 3 нажата! Счетчик: " << clickCount3 << std::endl;
-    });
-    
-     button4.setOnClick([&clickCount4]() {
-        clickCount4++;
-        std::cout << "Кнопка 4 нажата! Счетчик: " << clickCount4 << std::endl;
-    });
-    
-    button5.setOnClick([&window]() {
-        std::cout << "Выход из приложения..." << std::endl;
-        window.close();
-    });
+    button1.setOnClick([&button1, &clickCount1]() {
+    clickCount1++;
+    std::cout << "Кнопка 1 нажата! Счетчик: " << clickCount1 << std::endl;
+    button1.setEnabled(false);
+});
 
-    button6.setOnClick([&clickCount6]() {
+button2.setOnClick([&button2, &clickCount2]() {
+    clickCount2++;
+    std::cout << "Кнопка 2 нажата! Счетчик: " << clickCount2 << std::endl;
+    button2.setEnabled(false);
+});
+
+button3.setOnClick([&button3, &clickCount3]() {
+    clickCount3++;
+    std::cout << "Кнопка 3 нажата! Счетчик: " << clickCount3 << std::endl;
+    button3.setEnabled(false);
+});
+
+button4.setOnClick([&button4, &clickCount4]() {
+    clickCount4++;
+    std::cout << "Кнопка 4 нажата! Счетчик: " << clickCount4 << std::endl;
+    button4.setEnabled(false);
+});
+
+button5.setOnClick([&window]() {
+    std::cout << "Выход из приложения..." << std::endl;
+    window.close();
+});
+
+button6.setOnClick([&button6, &clickCount6]() {
     clickCount6++;
     std::cout << "Кнопка 6 нажата! Счетчик: " << clickCount6 << std::endl;
-    });
+    button6.setEnabled(false);
+});
 
-    button7.setOnClick([&clickCount7]() {
-        clickCount7++;
-        std::cout << "Кнопка 7 нажата! Счетчик: " << clickCount7 << std::endl;
-    });
+button7.setOnClick([&button7, &clickCount7]() {
+    clickCount7++;
+    std::cout << "Кнопка 7 нажата! Счетчик: " << clickCount7 << std::endl;
+    button7.setEnabled(false);
+});
 
-    button8.setOnClick([&clickCount8]() {
-        clickCount8++;
-        std::cout << "Кнопка 8 нажата! Счетчик: " << clickCount8 << std::endl;
-    });
+button8.setOnClick([&button8, &clickCount8]() {
+    clickCount8++;
+    std::cout << "Кнопка 8 нажата! Счетчик: " << clickCount8 << std::endl;
+    button8.setEnabled(false);
+});
 
-    button9.setOnClick([&clickCount9]() {
-        clickCount9++;
-        std::cout << "Кнопка 9 нажата! Счетчик: " << clickCount9 << std::endl;
-    });
+button9.setOnClick([&button9, &clickCount9]() {
+    clickCount9++;
+    std::cout << "Кнопка 9 нажата! Счетчик: " << clickCount9 << std::endl;
+    button9.setEnabled(false);
+});
 
-    button10.setOnClick([&clickCount10]() {
-        clickCount10++;
-        std::cout << "Кнопка 10 нажата! Счетчик: " << clickCount10 << std::endl;
-    });
+button10.setOnClick([&button10, &clickCount10]() {
+    clickCount10++;
+    std::cout << "Кнопка 10 нажата! Счетчик: " << clickCount10 << std::endl;
+    button10.setEnabled(false);
+});
 
-    button11.setOnClick([&clickCount11]() {
-        clickCount11++;
-        std::cout << "Кнопка 11 нажата! Счетчик: " << clickCount11 << std::endl;
-    });
+button11.setOnClick([&button11, &clickCount11]() {
+    clickCount11++;
+    std::cout << "Кнопка 11 нажата! Счетчик: " << clickCount11 << std::endl;
+    button11.setEnabled(false);
+});
 
-    button12.setOnClick([&clickCount12]() {
-        clickCount12++;
-        std::cout << "Кнопка 12 нажата! Счетчик: " << clickCount12 << std::endl;
-    });
+button12.setOnClick([&button12, &clickCount12]() {
+    clickCount12++;
+    std::cout << "Кнопка 12 нажата! Счетчик: " << clickCount12 << std::endl;
+    button12.setEnabled(false);
+});
 
-    button13.setOnClick([&clickCount13]() {
-        clickCount13++;
-        std::cout << "Кнопка 13 нажата! Счетчик: " << clickCount13 << std::endl;
-    });
+button13.setOnClick([&button13, &clickCount13]() {
+    clickCount13++;
+    std::cout << "Кнопка 13 нажата! Счетчик: " << clickCount13 << std::endl;
+    button13.setEnabled(false);
+});
 
-    button14.setOnClick([&clickCount14]() {
-        clickCount14++;
-        std::cout << "Кнопка 14 нажата! Счетчик: " << clickCount14 << std::endl;
-    });
+button14.setOnClick([&button14, &clickCount14]() {
+    clickCount14++;
+    std::cout << "Кнопка 14 нажата! Счетчик: " << clickCount14 << std::endl;
+    button14.setEnabled(false);
+});
 
-    button15.setOnClick([&clickCount15]() {
-        clickCount15++;
-        std::cout << "Кнопка 15 нажата! Счетчик: " << clickCount15 << std::endl;
-    });
+button15.setOnClick([&button15, &clickCount15]() {
+    clickCount15++;
+    std::cout << "Кнопка 15 нажата! Счетчик: " << clickCount15 << std::endl;
+    button15.setEnabled(false);
+});
 
-    button16.setOnClick([&clickCount16]() {
-        clickCount16++;
-        std::cout << "Кнопка 16 нажата! Счетчик: " << clickCount16 << std::endl;
-    });
+button16.setOnClick([&button16, &clickCount16]() {
+    clickCount16++;
+    std::cout << "Кнопка 16 нажата! Счетчик: " << clickCount16 << std::endl;
+    button16.setEnabled(false);
+});
 
-    button17.setOnClick([&clickCount17]() {
-        clickCount17++;
-        std::cout << "Кнопка 17 нажата! Счетчик: " << clickCount17 << std::endl;
-    });
+button17.setOnClick([&button17, &clickCount17]() {
+    clickCount17++;
+    std::cout << "Кнопка 17 нажата! Счетчик: " << clickCount17 << std::endl;
+    button17.setEnabled(false);
+});
 
-    button18.setOnClick([&clickCount18]() {
-        clickCount18++;
-        std::cout << "Кнопка 18 нажата! Счетчик: " << clickCount18 << std::endl;
-    });
+button18.setOnClick([&button18, &clickCount18]() {
+    clickCount18++;
+    std::cout << "Кнопка 18 нажата! Счетчик: " << clickCount18 << std::endl;
+    button18.setEnabled(false);
+});
 
-    button19.setOnClick([&clickCount19]() {
-        clickCount19++;
-        std::cout << "Кнопка 19 нажата! Счетчик: " << clickCount19 << std::endl;
-    });
+button19.setOnClick([&button19, &clickCount19]() {
+    clickCount19++;
+    std::cout << "Кнопка 19 нажата! Счетчик: " << clickCount19 << std::endl;
+    button19.setEnabled(false);
+});
 
-    button20.setOnClick([&clickCount20]() {
-        clickCount20++;
-        std::cout << "Кнопка 20 нажата! Счетчик: " << clickCount20 << std::endl;
-    });
+button20.setOnClick([&button20, &clickCount20]() {
+    clickCount20++;
+    std::cout << "Кнопка 20 нажата! Счетчик: " << clickCount20 << std::endl;
+    button20.setEnabled(false);
+});
 
-    button21.setOnClick([&clickCount21]() {
-        clickCount21++;
-        std::cout << "Кнопка 21 нажата! Счетчик: " << clickCount21 << std::endl;
-    });
+button21.setOnClick([&button21, &clickCount21]() {
+    clickCount21++;
+    std::cout << "Кнопка 21 нажата! Счетчик: " << clickCount21 << std::endl;
+    button21.setEnabled(false);
+});
 
-    button22.setOnClick([&clickCount22]() {
-        clickCount22++;
-        std::cout << "Кнопка 22 нажата! Счетчик: " << clickCount22 << std::endl;
-    });
+button22.setOnClick([&button22, &clickCount22]() {
+    clickCount22++;
+    std::cout << "Кнопка 22 нажата! Счетчик: " << clickCount22 << std::endl;
+    button22.setEnabled(false);
+});
 
-    button23.setOnClick([&clickCount23]() {
-        clickCount23++;
-        std::cout << "Кнопка 23 нажата! Счетчик: " << clickCount23 << std::endl;
-    });
+button23.setOnClick([&button23, &clickCount23]() {
+    clickCount23++;
+    std::cout << "Кнопка 23 нажата! Счетчик: " << clickCount23 << std::endl;
+    button23.setEnabled(false);
+});
 
-    button24.setOnClick([&clickCount24]() {
-        clickCount24++;
-        std::cout << "Кнопка 24 нажата! Счетчик: " << clickCount24 << std::endl;
-    });
+button24.setOnClick([&button24, &clickCount24]() {
+    clickCount24++;
+    std::cout << "Кнопка 24 нажата! Счетчик: " << clickCount24 << std::endl;
+    button24.setEnabled(false);
+});
 
-    button25.setOnClick([&clickCount25]() {
-        clickCount25++;
-        std::cout << "Кнопка 25 нажата! Счетчик: " << clickCount25 << std::endl;
-    });
+button25.setOnClick([&button25, &clickCount25]() {
+    clickCount25++;
+    std::cout << "Кнопка 25 нажата! Счетчик: " << clickCount25 << std::endl;
+    button25.setEnabled(false);
+});
 
-    button26.setOnClick([&clickCount26]() {
-        clickCount26++;
-        std::cout << "Кнопка 26 нажата! Счетчик: " << clickCount26 << std::endl;
-    });
+button26.setOnClick([&button26, &clickCount26]() {
+    clickCount26++;
+    std::cout << "Кнопка 26 нажата! Счетчик: " << clickCount26 << std::endl;
+    button26.setEnabled(false);
+});
 
-    button27.setOnClick([&clickCount27]() {
-        clickCount27++;
-        std::cout << "Кнопка 27 нажата! Счетчик: " << clickCount27 << std::endl;
-    });
+button27.setOnClick([&button27, &clickCount27]() {
+    clickCount27++;
+    std::cout << "Кнопка 27 нажата! Счетчик: " << clickCount27 << std::endl;
+    button27.setEnabled(false);
+});
 
     std::cout << "Интерактивные кнопки готовы!" << std::endl;
     std::cout << "Наведите мышь на кнопки и нажмите на них." << std::endl;
