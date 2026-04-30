@@ -3,9 +3,22 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdlib> //добавила
+
+#ifdef _WIN32
+    #include <windows.h>
+#endif
 
 int main()
 {
+    #ifdef _WIN32
+        system("chcp 65001 > nul"); // Переключение консоли на UTF-8
+        SetConsoleOutputCP(CP_UTF8);
+        SetConsoleCP(CP_UTF8);
+    #endif
+    system("chcp 65001 > nul");  //добавила
+    SetConsoleOutputCP(CP_UTF8); //добавила
+    SetConsoleCP(CP_UTF8); //добавила
     // Создаем окно
     sf::RenderWindow window(
         sf::VideoMode(sf::Vector2u(800, 600)), 
@@ -29,12 +42,13 @@ int main()
     // Попытка загрузить шрифт из стандартных мест
     // Используем шрифты с поддержкой кириллицы
     std::vector<std::string> fontPaths = {
-        "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",  // macOS - поддерживает кириллицу
-        "/System/Library/Fonts/Helvetica.ttc",                    // macOS - fallback
-        "/Library/Fonts/Arial.ttf",                              // macOS - альтернатива
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",      // Linux
-        "resources/font.ttf"                                     // Локальный
-    };
+    "C:/Windows/Fonts/arial.ttf",          // Стандартный, есть везде, поддерживает кириллицу
+    "C:/Windows/Fonts/segoeui.ttf",        // Стандартный шрифт Windows 10/11
+    "C:/Windows/Fonts/times.ttf",          // Times New Roman
+    "C:/Windows/Fonts/consola.ttf",        // Consola (моноширинный, хорошо для игр)
+    "/System/Library/Fonts/Helvetica.ttc", // macOS
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf" // Linux
+};
     
     for (const auto& path : fontPaths)
     {
