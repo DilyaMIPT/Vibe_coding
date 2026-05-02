@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "WordsList.h"  //для добавления слов из словаря
+#include <set> //для хранения угаданных букв
 #include <cstdlib> //добавила
 
 #ifdef _WIN32
@@ -79,6 +81,46 @@ int main()
         std::cout << "Используйте шрифт с поддержкой Unicode (например, Arial Unicode MS или скачайте с Google Fonts)" << std::endl;
     }
     
+    //Переменные для окошек
+    std::string secretWord = WordList::getRandomWord();  //случайное слово
+    std::cout << "Загаданное слово (для теста): " << secretWord << std::endl;  //для проверки
+
+    std::set<char> guessedLetters;  //угаданные буквы
+    if (!secretWord.empty()) {
+        guessedLetters.insert(secretWord[0]); 
+    }
+
+    std::vector<sf::RectangleShape> wordBoxes(7);
+    for (int i = 0; i < 7; ++i) {
+        wordBoxes[i].setSize(sf::Vector2f(50, 60));
+        wordBoxes[i].setFillColor(sf::Color(60, 60, 80));
+        wordBoxes[i].setOutlineColor(sf::Color::White);
+        wordBoxes[i].setOutlineThickness(2);
+        wordBoxes[i].setPosition(sf::Vector2f(150.f + i * 55.f, 100.f)); 
+    }
+
+    std::vector<sf::Text> wordLetters;
+    wordLetters.reserve(7);
+    for (int i = 0; i < 7; ++i) {
+        sf::Text txt(font, "", 40);
+        txt.setFillColor(sf::Color::White);
+        wordLetters.push_back(std::move(txt));
+    }
+
+    // Обновляем отображение первой буквы
+    if (!secretWord.empty()) {
+        wordLetters[0].setString(std::string(1, secretWord[0]));
+        sf::FloatRect bounds = wordLetters[0].getLocalBounds();
+        wordLetters[0].setOrigin(sf::Vector2f(
+            bounds.position.x + bounds.size.x / 2.f,
+            bounds.position.y + bounds.size.y / 2.f
+        ));
+        wordLetters[0].setPosition(sf::Vector2f(
+            wordBoxes[0].getPosition().x + wordBoxes[0].getSize().x / 2.f,
+            wordBoxes[0].getPosition().y + wordBoxes[0].getSize().y / 2.f
+        ));
+    }
+    
     // Создаем фиктивную текстуру для кнопки (не используется, но требуется конструктором)
     // SFML 3.0: создаем текстуру через Image, так как create() удален
     sf::Texture dummyTexture;
@@ -135,17 +177,58 @@ int main()
   std::vector<int> clickCounts(buttons.size(), 0);
   
     for (size_t i = 0; i < buttons.size(); ++i) {
-        if (i == 4) {  // Кнопка "Exit"
+        if (i == 4) {  // Кнопка "Exit" 
             buttons[i].setOnClick([&window]() {
-                std::cout << "Выход..." << std::endl;
                 window.close();
             });
-        } else {  // Все остальные
-            buttons[i].setOnClick([i, &buttons, &clickCounts]() {
-                clickCounts[i]++;
-                std::cout << "Кнопка " << (i+1) << " нажата! Счетчик: " 
-                        << clickCounts[i] << std::endl;
+        } 
+        else {
+        // Получаем букву из текста кнопки
+            char letter = buttonTexts[i][0];
+        
+            buttons[i].setOnClick([i, letter, &buttons, &guessedLetters, &secretWord, 
+                      &wordLetters, &wordBoxes]() {
                 buttons[i].setEnabled(false);
+                // Если буква уже была угадана — ничего не делаем
+                if (guessedLetters.count(letter)) return;
+            
+                bool found = false;
+                for (size_t pos = 0; pos < secretWord.length(); ++pos) {
+                    if (secretWord[pos] == letter) {
+                        guessedLetters.insert(letter);
+                        wordLetters[pos].setString(std::string(1, letter));
+                        // центрирование
+                        sf::FloatRect bounds = wordLetters[pos].getLocalBounds();
+                        wordLetters[pos].setOrigin(sf::Vector2f(
+                            bounds.position.x + bounds.size.x / 2.f,
+                            bounds.position.y + bounds.size.y / 2.f
+                        ));
+                        
+                        wordLetters[pos].setPosition(sf::Vector2f(
+                            wordBoxes[pos].getPosition().x + wordBoxes[pos].getSize().x / 2.f,
+                            wordBoxes[pos].getPosition().y + wordBoxes[pos].getSize().y / 2.f
+                        ));
+                        found = true;
+                    }
+                }
+            
+                if (!found) {
+                    std::cout << "Буквы " << letter << " нет в слове!" << std::endl;
+                } 
+                else {
+                    std::cout << "Буква " << letter << " есть!" << std::endl;
+                
+                    bool win = true;
+                    for (char c : secretWord) {
+                        if (!guessedLetters.count(c)) {
+                            win = false;
+                            break;
+                        }
+                    }
+                    if (win) {
+                        std::cout << "Ура!!! Слово: " << secretWord << std::endl;
+                    }
+                }
             });
         }
     }
@@ -206,6 +289,16 @@ int main()
         // Очистка экрана
         window.clear(sf::Color(40, 40, 60));
         
+        // Отрисовка слова
+        for (const auto& box : wordBoxes) {
+            window.draw(box);
+        }
+        for (const auto& txt : wordLetters) {
+            if (!txt.getString().isEmpty()) {
+                window.draw(txt);
+            }
+        }
+
         // Отрисовка кнопок
         for (int i = 0; i < buttons.size(); ++i){
                 buttons[i].draw(window);
