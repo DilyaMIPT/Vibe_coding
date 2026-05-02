@@ -7,16 +7,16 @@
 #include <random>
 
 namespace WordList {
-    constexpr std::array<std::string, 40> words = {{
-        "compile", "integer", "runtime", "pointer", "virtual",
-        "algebra", "theorem", "formula", "decimal", "complex",
-        "quantum", "gravity", "neutron", "nuclear", "kinetic",
-        "element", "organic", "solvent", "crystal", "polymer",
-        "boolean", "statics", "dynamic", "vectors", "scalars",
-        "nucleus", "protons", "photons", "isotope", "enzymes",
-        "acidity", "oxidize", "reduces", "solutes", "mixture",
-        "entropy", "thermal", "optical", "wavelet", "logical"
-    }};
+    const std::array<std::string, 40> words = {{
+    "COMPILE", "INTEGER", "RUNTIME", "POINTER", "VIRTUAL",
+    "ALGEBRA", "THEOREM", "FORMULA", "DECIMAL", "COMPLEX",
+    "QUANTUM", "GRAVITY", "NEUTRON", "NUCLEAR", "KINETIC",
+    "ELEMENT", "ORGANIC", "SOLVENT", "CRYSTAL", "POLYMER",
+    "BOOLEAN", "STATICS", "DYNAMIC", "VECTORS", "SCALARS",
+    "NUCLEUS", "PROTONS", "PHOTONS", "ISOTOPE", "ENZYMES",
+    "ACIDITY", "OXIDIZE", "REDUCES", "SOLUTES", "MIXTURE",
+    "ENTROPY", "THERMAL", "OPTICAL", "WAVELET", "LOGICAL"
+}};
 
     inline std::string getRandomWord() {
         static std::random_device rd;
