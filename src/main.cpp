@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include "Button.h"
 #include <iostream>
+#include <filesystem>
+#include <algorithm>
 #include <string>
 #include <vector>
 #include "WordsList.h"  //для добавления слов из словаря
@@ -107,6 +109,45 @@ int main()
         wordLetters.push_back(std::move(txt));
     }
 
+    sf::Texture hangmanTexture;
+    sf::Texture hangmanDummyTexture;
+    sf::Image hangmanDummyImage(sf::Vector2u(1, 1), sf::Color::Transparent);
+    hangmanDummyTexture.loadFromImage(hangmanDummyImage);
+    sf::Sprite hangmanSprite(hangmanDummyTexture);
+    int mistakesCount = 0;
+
+    //загрузка изображения виселицы  (проверка)
+    sf::Image hangmanImage;
+    if (hangmanImage.loadFromFile("resources/hangman_0.png"))
+    {
+        std::cout << "hangmanImage загружен! Размер: " << hangmanImage.getSize().x << "x" << hangmanImage.getSize().y << std::endl;
+        
+        if (hangmanTexture.loadFromImage(hangmanImage))
+        {
+            std::cout << " hangmanTexture создана!" << std::endl;
+            
+
+            hangmanSprite = sf::Sprite(hangmanTexture);            
+            // Масштаби
+            float targetHeight = 200.f;
+            float scale = targetHeight / static_cast<float>(hangmanTexture.getSize().y);
+            hangmanSprite.setScale(sf::Vector2f(scale, scale));
+            
+            // Позиция
+            hangmanSprite.setPosition(sf::Vector2f(580.f, 100.f));
+        
+        }
+        else
+        {
+            std::cout << "ОШИБКА: Не удалось создать текстуру из изображения" << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "ОШИБКА: Не удалось загрузить hangmanImage" << std::endl;
+    }
+
+
     // Обновляем отображение первой буквы
     if (!secretWord.empty()) {
         wordLetters[0].setString(std::string(1, secretWord[0]));
@@ -122,7 +163,6 @@ int main()
     }
     
     // Создаем фиктивную текстуру для кнопки (не используется, но требуется конструктором)
-    // SFML 3.0: создаем текстуру через Image, так как create() удален
     sf::Texture dummyTexture;
     sf::Image dummyImage(sf::Vector2u(1, 1), sf::Color::White);
     if (!dummyTexture.loadFromImage(dummyImage))
@@ -186,8 +226,8 @@ int main()
         // Получаем букву из текста кнопки
             char letter = buttonTexts[i][0];
         
-            buttons[i].setOnClick([i, letter, &buttons, &guessedLetters, &secretWord, 
-                      &wordLetters, &wordBoxes]() {
+            buttons[i].setOnClick([i, letter, &buttons, &guessedLetters, &secretWord, &wordLetters, &wordBoxes, &mistakesCount, &hangmanTexture, &hangmanSprite]() {
+                
                 buttons[i].setEnabled(false);
                 // Если буква уже была угадана — ничего не делаем
                 if (guessedLetters.count(letter)) return;
@@ -214,7 +254,34 @@ int main()
             
                 if (!found) {
                     std::cout << "Буквы " << letter << " нет в слове!" << std::endl;
-                } 
+                    mistakesCount++;
+                if (mistakesCount <= 5){
+                    std::string nextPath = "resources/hangman_" + std::to_string(mistakesCount) + ".png";
+                    if (hangmanTexture.loadFromFile(nextPath))
+                    {
+                        hangmanSprite.setTexture(hangmanTexture);
+                        // Восстанавливаем масштаб и позицию (SFML 3.0 стиль)
+                        float targetHeight = 200.f;
+                        float scale = targetHeight / static_cast<float>(hangmanTexture.getSize().y);
+                        hangmanSprite.setScale(sf::Vector2f(scale, scale));
+                        hangmanSprite.setPosition(sf::Vector2f(580.f, 100.f));
+                    }
+                }
+                
+                if (mistakesCount >= 5) {
+                    std::cout << "Игра окончена. Слово было: " << secretWord << std::endl;
+
+                    for (size_t j = 0; j < buttons.size(); ++j) {
+                    if (j != 4) {  // не трогаем кнопку Exit
+                        buttons[j].setEnabled(false);
+                        buttons[j].setBackgroundColor(sf::Color(128, 128, 128));  
+                        buttons[j].setHoverColor(sf::Color(128, 128, 128));       
+                        buttons[j].setPressedColor(sf::Color(100, 100, 100));      
+                    }
+                }
+                }
+                }
+                
                 else {
                     std::cout << "Буква " << letter << " есть!" << std::endl;
                 
@@ -233,18 +300,6 @@ int main()
         }
     }
 
-    // // Устанавливаем callback функции
-    // for (int i = 0; i < buttons.size(); ++i){
-    //     clickCounts[i] = 0;
-    // }
-    
-    // for (int i = 0; i < buttons.size(); ++i){
-    //     buttons[i].setOnClick([i, &buttons, &clickCounts]() {
-    //     clickCounts[i]++;
-    //     std::cout << "Кнопка " << (i+1) << " нажата! Счетчик: " << clickCounts[i] << std::endl;
-    //     buttons[i].setEnabled(false);
-    //     });
-    // }
 
 
     std::cout << "Интерактивные кнопки готовы!" << std::endl;
@@ -303,14 +358,14 @@ int main()
         for (int i = 0; i < buttons.size(); ++i){
                 buttons[i].draw(window);
             }
+    
+
+        // Отрисовка изображения
+        window.draw(hangmanSprite);
+
         // Отображение
         window.display();
     }
     
-
-    std::cout << "Приложение завершено." << std::endl;
-    for (int i = 0; i < buttons.size(); ++i){
-        std::cout << "Кнопка"<< i << "была нажата " << clickCounts[i] << " раз(а)." << std::endl;
-    }
         return 0;
 }

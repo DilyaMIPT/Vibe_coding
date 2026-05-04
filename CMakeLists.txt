@@ -13,7 +13,7 @@ endif()
 add_executable(${PROJECT_NAME} src/main.cpp src/Button.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
-#${CMAKE_CURRENT_SOURCE_DIR}.     ${SFML_INCLUDE_DIRS}
+
 # Подключение библиотек SFML
 if(TARGET SFML::System)
     target_link_libraries(${PROJECT_NAME} PRIVATE 
@@ -26,7 +26,9 @@ else()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SFML_LIBRARIES})
 endif()
 
-# Копирование ресурсов
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources 
-     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
-     FILES_MATCHING PATTERN "*.ttf" PATTERN "*.otf")
+# Копирование ресурсов при каждой сборке
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/resources
+    ${CMAKE_BINARY_DIR}/resources
+)
