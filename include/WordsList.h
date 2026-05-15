@@ -7,15 +7,13 @@
 #include <random>
 
 namespace WordList {
-    const std::array<std::string, 40> words = {{
-    "BANANAS", "BURGERS", "POPCORN", "PANCAKE", "CUPCAKE",
-    "PICKLES", "BISCUIT", "SAUSAGE", "AVOCADO", "SPINACH",
-    "COOKIES", "MUFFINS", "NOODLES", "PRETZEL", "TACOBEL",
-    "PANINIS", "CEREALS", "BROWNIE", "CHEESES", "KETCHUP",
-    "MUSTARD", "PUDDING", "CROUTON", "MEATBAL", "OREGANO",
-    "PEANUTS", "POPCORN", "WALNUTS", "CHERRYS", "MELONSS",
-    "PANCAKE", "PICKLES", "MUFFINS", "COOKIES", "PRETZEL",
-    "BROWNIE", "NOODLES", "CHEESES", "BANANAS", "BURGERS"
+    const std::array<std::string, 30> words = {{
+    "BANANAS", "BURGERS", "PANCAKE", "APRICOT", "PICKLES",
+    "BISCUIT", "SPINACH", "COOKIES", "MUFFINS", "NOODLES",
+    "PRETZEL", "KETCHUP", "MUSTARD", "PUDDING", "PEANUTS",
+    "WALNUTS", "BROWNIE", "TRUFFLE", "LASAGNA", "CARAMEL",
+    "CROUTON", "BURRITO", "PARSLEY", "ORANGES", "GRANOLA",
+    "WAFFLES", "OATMEAL", "RAVIOLI", "VANILLA", "TACOBEL"
 }};
 
     inline std::string getRandomWord() {
