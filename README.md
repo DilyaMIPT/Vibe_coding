@@ -17,22 +17,18 @@
 
 ## Запуск программы происходит следующим образом:
 
-на Macos: 
-
-cmake 
-
-make
-
+на Macos:  
+cmake   
+make  
 ./Example3_Buttons
 
-на Windows:
-
-cmake -S . -B build -G "MinGW Makefiles" 
-
-cd build
-
-cmake --build .
-
+на Windows:  
+cmake -S . -B build -G "MinGW Makefiles"  
+cd build  
+cmake --build .  
 .\Example3_Buttons.exe
+
+## Проект выполнен:
+Боброва Мария Ибадуллина Диляра Б04-402
 
 
