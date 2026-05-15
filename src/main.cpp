@@ -7,27 +7,25 @@
 #include <vector>
 #include "WordsList.h"  //для добавления слов из словаря
 #include <set> //для хранения угаданных букв
-#include <cstdlib> //добавила
+#include <cstdlib> 
 
 #ifdef _WIN32
     #include <windows.h>
 #endif
 
-int main()
-{
+int main() {
     #ifdef _WIN32
         system("chcp 65001 > nul"); // Переключение консоли на UTF-8
         SetConsoleOutputCP(CP_UTF8);
         SetConsoleCP(CP_UTF8);
     #endif
-    // system("chcp 65001 > nul");  //добавила
-    // SetConsoleOutputCP(CP_UTF8); //добавила
-    // SetConsoleCP(CP_UTF8); //добавила
+
     #ifdef _WIN32
     system("chcp 65001 > nul");
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     #endif
+
     // Создаем окно
     sf::RenderWindow window(
         sf::VideoMode(sf::Vector2u(800, 600)), 
@@ -36,14 +34,7 @@ int main()
     window.setFramerateLimit(60);
     
     // Загрузка шрифта
-    // SFML не предоставляет встроенных шрифтов, нужно загрузить свой
-    // Для примера используем системный шрифт или создаем простую кнопку без текста
     sf::Font font;
-    
-    // Попытка загрузить шрифт (если есть)
-    // На macOS можно использовать системные шрифты:
-    // font.loadFromFile("/System/Library/Fonts/Helvetica.ttc");
-    // Или скачать бесплатный шрифт (например, с Google Fonts)
     
     // Если шрифт не загружен, создадим кнопку без текста (только форма)
     bool fontLoaded = false;
@@ -51,13 +42,13 @@ int main()
     // Попытка загрузить шрифт из стандартных мест
     // Используем шрифты с поддержкой кириллицы
     std::vector<std::string> fontPaths = {
-    "C:/Windows/Fonts/arial.ttf",          // Стандартный, есть везде, поддерживает кириллицу
-    "C:/Windows/Fonts/segoeui.ttf",        // Стандартный шрифт Windows 10/11
-    "C:/Windows/Fonts/times.ttf",          // Times New Roman
-    "C:/Windows/Fonts/consola.ttf",        // Consola (моноширинный, хорошо для игр)
-    "/System/Library/Fonts/Helvetica.ttc", // macOS
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf" // Linux
-};
+        "C:/Windows/Fonts/arial.ttf",          // Стандартный, есть везде, поддерживает кириллицу
+        "C:/Windows/Fonts/segoeui.ttf",        // Стандартный шрифт Windows 10/11
+        "C:/Windows/Fonts/times.ttf",          // Times New Roman
+        "C:/Windows/Fonts/consola.ttf",        // Consola (моноширинный, хорошо для игр)
+        "/System/Library/Fonts/Helvetica.ttc", // macOS
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf" // Linux
+    };
     
     for (const auto& path : fontPaths)
     {
@@ -85,13 +76,13 @@ int main()
     
     //Переменные для окошек
     std::string secretWord = WordList::getRandomWord();  //случайное слово
-    std::cout << "Загаданное слово (для теста): " << secretWord << std::endl;  //для проверки
 
     std::set<char> guessedLetters;  //угаданные буквы
+
     if (!secretWord.empty()) {
         guessedLetters.insert(secretWord[0]); 
     }
-
+    // создание ячеек
     std::vector<sf::RectangleShape> wordBoxes(7);
     for (int i = 0; i < 7; ++i) {
         wordBoxes[i].setSize(sf::Vector2f(50, 60));
@@ -100,7 +91,7 @@ int main()
         wordBoxes[i].setOutlineThickness(2);
         wordBoxes[i].setPosition(sf::Vector2f(150.f + i * 55.f, 100.f)); 
     }
-
+    // выделение ячеек и памяти
     std::vector<sf::Text> wordLetters;
     wordLetters.reserve(7);
     for (int i = 0; i < 7; ++i) {
@@ -109,6 +100,7 @@ int main()
         wordLetters.push_back(std::move(txt));
     }
 
+    //подготовка виселицы + введение некоторых переменных
     sf::Texture hangmanTexture;
     sf::Texture hangmanDummyTexture;
     sf::Image hangmanDummyImage(sf::Vector2u(1, 1), sf::Color::Transparent);
@@ -116,16 +108,17 @@ int main()
     sf::Sprite hangmanSprite(hangmanDummyTexture);
     int mistakesCount = 0;
     bool gameFinished = false;
+    // надписи для игры 
     sf::Text resultText(font, "", 44);
     resultText.setFillColor(sf::Color(255, 220, 120));
     resultText.setStyle(sf::Text::Bold);
     resultText.setPosition(sf::Vector2f(270.f, 235.f));
 
-sf::Text wordResultText(font, "", 28);
-wordResultText.setFillColor(sf::Color::White);
-wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
+    sf::Text wordResultText(font, "", 28);
+    wordResultText.setFillColor(sf::Color::White);
+    wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
 
-    //загрузка изображения виселицы  (проверка)
+    //загрузка изображения виселицы 0 изображение
     sf::Image hangmanImage;
     if (hangmanImage.loadFromFile("resources/hangman_0.png"))
     {
@@ -134,10 +127,9 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
         if (hangmanTexture.loadFromImage(hangmanImage))
         {
             std::cout << " hangmanTexture создана!" << std::endl;
-            
 
             hangmanSprite = sf::Sprite(hangmanTexture);            
-            // Масштаби
+            // Масштаб
             float targetHeight = 200.f;
             float scale = targetHeight / static_cast<float>(hangmanTexture.getSize().y);
             hangmanSprite.setScale(sf::Vector2f(scale, scale));
@@ -148,12 +140,12 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
         }
         else
         {
-            std::cout << "ОШИБКА: Не удалось создать текстуру из изображения" << std::endl;
+            std::cout << "Ошибка: Не удалось создать текстуру из изображения" << std::endl;
         }
     }
     else
     {
-        std::cout << "ОШИБКА: Не удалось загрузить hangmanImage" << std::endl;
+        std::cout << "Ошибка: Не удалось загрузить hangmanImage" << std::endl;
     }
 
 
@@ -181,7 +173,6 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
     
     // Создаем кнопки
     // Используем английский текст по умолчанию для совместимости
-    // Если нужна кириллица, используйте шрифт с поддержкой Unicode (например, Arial Unicode MS)
 
     std::vector<std::string> buttonTexts = {"A", "B", "C", "D", "Exit", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
@@ -193,7 +184,6 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
     }
         
     // Устанавливаем позиции
-
     for (size_t i = 0; i < buttons.size(); ++i) {
         int column = i / 3;
         int row = i % 3;
@@ -202,7 +192,7 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
         buttons[i].setPosition(x, y);
     }
 
-        // КНОПКА TRY AGAIN
+    // кнопка try again
     sf::RectangleShape tryAgainButton(sf::Vector2f(150, 50));
     tryAgainButton.setFillColor(sf::Color(70, 130, 180));
     tryAgainButton.setOutlineColor(sf::Color::White);
@@ -213,7 +203,7 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
     tryAgainText.setFillColor(sf::Color::White);
     tryAgainText.setStyle(sf::Text::Bold);
 
-    // ЦЕНТРИРОВАНИЕ ТЕКСТА НА КНОПКЕ 
+    // текст должен быть на кнопке
     sf::FloatRect textBounds = tryAgainText.getLocalBounds();
     tryAgainText.setOrigin(sf::Vector2f(
         textBounds.position.x + textBounds.size.x / 2.f,
@@ -221,43 +211,44 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
     ));
     tryAgainText.setPosition(sf::Vector2f(
         tryAgainButton.getPosition().x + tryAgainButton.getSize().x / 2.f,
-        tryAgainButton.getPosition().y + tryAgainButton.getSize().y / 2.f + 5.f  // +5 для визуального центра
+        tryAgainButton.getPosition().y + tryAgainButton.getSize().y / 2.f + 5.f 
     ));
 
     // Функция перезапуска игры
     auto restartGame = [&]() {
         // Сброс текста
-    resultText.setString("");
-    wordResultText.setString("");
+        resultText.setString("");
+        wordResultText.setString("");
 
-    // ОБНОВЛЕНИЕ ПОЗИЦИИ ТЕКСТА TRY AGAIN
-    sf::FloatRect textBounds = tryAgainText.getLocalBounds();
-    tryAgainText.setOrigin(sf::Vector2f(
-        textBounds.position.x + textBounds.size.x / 2.f,
-        textBounds.position.y + textBounds.size.y / 2.f
-    ));
-    tryAgainText.setPosition(sf::Vector2f(
-        tryAgainButton.getPosition().x + tryAgainButton.getSize().x / 2.f,
-        tryAgainButton.getPosition().y + tryAgainButton.getSize().y / 2.f + 5.f
-    ));
+        // обновление позиции текста рестарта
+        sf::FloatRect textBounds = tryAgainText.getLocalBounds();
+        tryAgainText.setOrigin(sf::Vector2f(
+            textBounds.position.x + textBounds.size.x / 2.f,
+            textBounds.position.y + textBounds.size.y / 2.f
+        ));
+        tryAgainText.setPosition(sf::Vector2f(
+            tryAgainButton.getPosition().x + tryAgainButton.getSize().x / 2.f,
+            tryAgainButton.getPosition().y + tryAgainButton.getSize().y / 2.f + 5.f
+        ));
+        
         // Сброс переменных
         gameFinished = false;
         mistakesCount = 0;
         guessedLetters.clear();
-        
+            
         // Новое слово
         secretWord = WordList::getRandomWord();
         std::cout << "Новое слово: " << secretWord << std::endl;
-        
-        if (!secretWord.empty()) {
+            
+        if (!secretWord.empty()) { 
             guessedLetters.insert(secretWord[0]);
         }
-        
+            
         // Очищаем буквы на экране
         for (auto& txt : wordLetters) {
-            txt.setString("");
+                txt.setString("");
         }
-        
+            
         // Показываем первую букву
         if (!secretWord.empty()) {
             wordLetters[0].setString(std::string(1, secretWord[0]));
@@ -270,8 +261,8 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
                 wordBoxes[0].getPosition().x + wordBoxes[0].getSize().x / 2.f,
                 wordBoxes[0].getPosition().y + wordBoxes[0].getSize().y / 2.f
             ));
-        }
-        
+            }
+            
         // Сброс виселицы
         hangmanTexture.loadFromFile("resources/hangman_0.png");
         hangmanSprite.setTexture(hangmanTexture);
@@ -279,11 +270,8 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
         float scale = targetHeight / static_cast<float>(hangmanTexture.getSize().y);
         hangmanSprite.setScale(sf::Vector2f(scale, scale));
         hangmanSprite.setPosition(sf::Vector2f(580.f, 100.f));
-        
-        // Сброс текста
-        resultText.setString("");
-        wordResultText.setString("");
-        
+    
+            
         // Включаем кнопки букв
         for (size_t i = 0; i < buttons.size(); ++i) {
             if (i != 4) {  // не Exit
@@ -294,11 +282,13 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
                     buttons[i].setBackgroundColor(sf::Color(70, 130, 180));
                     buttons[i].setHoverColor(sf::Color(100, 160, 210));
                     buttons[i].setPressedColor(sf::Color(50, 100, 150));
-                } else if (column % 3 == 1) {
+                }
+                else if (column % 3 == 1) {
                     buttons[i].setBackgroundColor(sf::Color(180, 70, 130));
                     buttons[i].setHoverColor(sf::Color(210, 100, 160));
                     buttons[i].setPressedColor(sf::Color(150, 50, 100));
-                } else {
+                }
+                else {
                     buttons[i].setBackgroundColor(sf::Color(180, 70, 70));
                     buttons[i].setHoverColor(sf::Color(210, 100, 100));
                     buttons[i].setPressedColor(sf::Color(150, 50, 50));
@@ -310,41 +300,43 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
 
     // Настройка цветов
     for (size_t i = 0; i < buttons.size(); ++i) {
-    int column = i / 3;
-    if (column % 3 == 0) {  // Синие
-        buttons[i].setBackgroundColor(sf::Color(70, 130, 180));
-        buttons[i].setHoverColor(sf::Color(100, 160, 210));
-        buttons[i].setPressedColor(sf::Color(50, 100, 150));
-    } else if (column % 3 == 1) {  // Розовые
-        buttons[i].setBackgroundColor(sf::Color(180, 70, 130));
-        buttons[i].setHoverColor(sf::Color(210, 100, 160));
-        buttons[i].setPressedColor(sf::Color(150, 50, 100));
-    } else {  // Красные
-        buttons[i].setBackgroundColor(sf::Color(180, 70, 70));
-        buttons[i].setHoverColor(sf::Color(210, 100, 100));
-        buttons[i].setPressedColor(sf::Color(150, 50, 50));
+        int column = i / 3;
+        if (column % 3 == 0) {  // Синие
+            buttons[i].setBackgroundColor(sf::Color(70, 130, 180));
+            buttons[i].setHoverColor(sf::Color(100, 160, 210));
+            buttons[i].setPressedColor(sf::Color(50, 100, 150));
+        } 
+        else if (column % 3 == 1) {  // Розовые
+            buttons[i].setBackgroundColor(sf::Color(180, 70, 130));
+            buttons[i].setHoverColor(sf::Color(210, 100, 160));
+            buttons[i].setPressedColor(sf::Color(150, 50, 100));
+        } else {  // Красные
+            buttons[i].setBackgroundColor(sf::Color(180, 70, 70));
+            buttons[i].setHoverColor(sf::Color(210, 100, 100));
+            buttons[i].setPressedColor(sf::Color(150, 50, 50));
+        }
     }
-}
 
-//объявляем кнопки
-  std::vector<int> clickCounts(buttons.size(), 0);
-  
+    //объявляем кнопки
+    std::vector<int> clickCounts(buttons.size(), 0);
+    
     for (size_t i = 0; i < buttons.size(); ++i) {
+
         if (i == 4) {  // Кнопка "Exit" 
             buttons[i].setOnClick([&window]() {
                 window.close();
             });
         } 
+        
         else {
         // Получаем букву из текста кнопки
             char letter = buttonTexts[i][0];
-        
             buttons[i].setOnClick([i, letter, &buttons, &guessedLetters, &secretWord, &wordLetters, &wordBoxes, &mistakesCount, &hangmanTexture, &hangmanSprite, &gameFinished, &resultText, &wordResultText]() {
                 if (gameFinished) return;
                 buttons[i].setEnabled(false);
                 // Если буква уже была угадана — ничего не делаем
                 if (guessedLetters.count(letter)) return;
-            
+                
                 bool found = false;
                 for (size_t pos = 0; pos < secretWord.length(); ++pos) {
                     if (secretWord[pos] == letter) {
@@ -356,7 +348,7 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
                             bounds.position.x + bounds.size.x / 2.f,
                             bounds.position.y + bounds.size.y / 2.f
                         ));
-                        
+                            
                         wordLetters[pos].setPosition(sf::Vector2f(
                             wordBoxes[pos].getPosition().x + wordBoxes[pos].getSize().x / 2.f,
                             wordBoxes[pos].getPosition().y + wordBoxes[pos].getSize().y / 2.f
@@ -364,23 +356,21 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
                         found = true;
                     }
                 }
-            
+                
                 if (!found) {
                     std::cout << "Буквы " << letter << " нет в слове!" << std::endl;
                     mistakesCount++;
                 if (mistakesCount <= 5){
                     std::string nextPath = "resources/hangman_" + std::to_string(mistakesCount) + ".png";
-                    if (hangmanTexture.loadFromFile(nextPath))
-                    {
+                    if (hangmanTexture.loadFromFile(nextPath)){
                         hangmanSprite.setTexture(hangmanTexture);
-                        // Восстанавливаем масштаб и позицию (SFML 3.0 стиль)
                         float targetHeight = 200.f;
                         float scale = targetHeight / static_cast<float>(hangmanTexture.getSize().y);
                         hangmanSprite.setScale(sf::Vector2f(scale, scale));
                         hangmanSprite.setPosition(sf::Vector2f(580.f, 100.f));
                     }
                 }
-                
+                    
                 if (mistakesCount >= 5) {
                     std::cout << "Игра окончена. Слово было: " << secretWord << std::endl;
                     gameFinished = true;
@@ -389,24 +379,24 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
                     wordResultText.setString("The word was: " + secretWord);
 
                     for (size_t j = 0; j < buttons.size(); ++j) {
-                    if (j != 4) {  // не трогаем кнопку Exit
-                        buttons[j].setEnabled(false);
-                        buttons[j].setBackgroundColor(sf::Color(128, 128, 128));  
-                        buttons[j].setHoverColor(sf::Color(128, 128, 128));       
-                        buttons[j].setPressedColor(sf::Color(100, 100, 100));      
+                        if (j != 4) {  // не трогаем кнопку Exit
+                            buttons[j].setEnabled(false);
+                            buttons[j].setBackgroundColor(sf::Color(128, 128, 128));  
+                            buttons[j].setHoverColor(sf::Color(128, 128, 128));       
+                            buttons[j].setPressedColor(sf::Color(100, 100, 100));      
+                        }
                     }
                 }
-                }
-                }
-                
+            }
+                    
                 else {
                     std::cout << "Буква " << letter << " есть!" << std::endl;
-                
+                    
                     bool win = true;
                     for (char c : secretWord) {
                         if (!guessedLetters.count(c)) {
-                            win = false;
-                            break;
+                                win = false;
+                                break;
                         }
                     }
                     if (win) {
@@ -429,10 +419,6 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
         }
     }
 
-
-
-    std::cout << "Интерактивные кнопки готовы!" << std::endl;
-    std::cout << "Наведите мышь на кнопки и нажмите на них." << std::endl;
     
     // Главный цикл
     while (window.isOpen())
@@ -447,11 +433,11 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
                 
                 if (buttonBounds.contains(static_cast<sf::Vector2f>(mousePos))) {
                     tryAgainButton.setFillColor(sf::Color(100, 160, 210)); // светлее при наведении
-                    if (event->is<sf::Event::MouseButtonPressed>() && 
-                        event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left) {
+                    if (event->is<sf::Event::MouseButtonPressed>() && event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left) {
                         restartGame();
                     }
-                } else {
+                } 
+                else {
                     tryAgainButton.setFillColor(sf::Color(70, 130, 180)); // обычный цвет
                 }
             }
@@ -460,27 +446,15 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
                 window.close();
             }
             
-            // Передаем события кнопкам (разыменовываем optional)
+            // Передаем события кнопкам
             sf::Event ev = *event;
             // Обработка событий для всех кнопок
             for (int i = 0; i < buttons.size(); ++i){
                 buttons[i].handleEvent(ev, window);
             }
-
-            
-            // Обработка ESC
-            if (event->is<sf::Event::KeyPressed>())
-            {
-                auto keyEvent = event->getIf<sf::Event::KeyPressed>();
-                if (keyEvent && keyEvent->code == sf::Keyboard::Key::Escape)
-                {
-                    window.close();
-                }
-            }
         }
         
         // Обновление кнопок (для обработки движения мыши)
-
         for (int i = 0; i < buttons.size(); ++i){
                 buttons[i].update(window);
             }
@@ -520,5 +494,5 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
         window.display();
     }
     
-        return 0;
+    return 0;
 }
