@@ -115,6 +115,15 @@ int main()
     hangmanDummyTexture.loadFromImage(hangmanDummyImage);
     sf::Sprite hangmanSprite(hangmanDummyTexture);
     int mistakesCount = 0;
+    bool gameFinished = false;
+    sf::Text resultText(font, "", 44);
+    resultText.setFillColor(sf::Color(255, 220, 120));
+    resultText.setStyle(sf::Text::Bold);
+    resultText.setPosition(sf::Vector2f(270.f, 235.f));
+
+sf::Text wordResultText(font, "", 28);
+wordResultText.setFillColor(sf::Color::White);
+wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
 
     //загрузка изображения виселицы  (проверка)
     sf::Image hangmanImage;
@@ -226,8 +235,8 @@ int main()
         // Получаем букву из текста кнопки
             char letter = buttonTexts[i][0];
         
-            buttons[i].setOnClick([i, letter, &buttons, &guessedLetters, &secretWord, &wordLetters, &wordBoxes, &mistakesCount, &hangmanTexture, &hangmanSprite]() {
-                
+            buttons[i].setOnClick([i, letter, &buttons, &guessedLetters, &secretWord, &wordLetters, &wordBoxes, &mistakesCount, &hangmanTexture, &hangmanSprite, &gameFinished, &resultText, &wordResultText]() {
+                if (gameFinished) return;
                 buttons[i].setEnabled(false);
                 // Если буква уже была угадана — ничего не делаем
                 if (guessedLetters.count(letter)) return;
@@ -270,6 +279,10 @@ int main()
                 
                 if (mistakesCount >= 5) {
                     std::cout << "Игра окончена. Слово было: " << secretWord << std::endl;
+                    gameFinished = true;
+                    resultText.setFillColor(sf::Color::Red);
+                    resultText.setString("GAME OVER");
+                    wordResultText.setString("The word was: " + secretWord);
 
                     for (size_t j = 0; j < buttons.size(); ++j) {
                     if (j != 4) {  // не трогаем кнопку Exit
@@ -294,6 +307,18 @@ int main()
                     }
                     if (win) {
                         std::cout << "Ура!!! Слово: " << secretWord << std::endl;
+                        gameFinished = true;
+                        resultText.setFillColor(sf::Color::Green);
+                        resultText.setString("YOU WIN!");
+                        wordResultText.setString("The word was: " + secretWord);
+                        for (size_t j = 0; j < buttons.size(); ++j) {
+                            if (j != 4) {
+                                buttons[j].setEnabled(false);
+                                buttons[j].setBackgroundColor(sf::Color(128, 128, 128));
+                                buttons[j].setHoverColor(sf::Color(128, 128, 128));
+                                buttons[j].setPressedColor(sf::Color(100, 100, 100));
+                            }
+                        }
                     }
                 }
             });
@@ -362,6 +387,11 @@ int main()
 
         // Отрисовка изображения
         window.draw(hangmanSprite);
+
+        if (gameFinished) {
+            window.draw(resultText);
+            window.draw(wordResultText);
+        }
 
         // Отображение
         window.display();
