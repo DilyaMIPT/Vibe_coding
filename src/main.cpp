@@ -202,6 +202,110 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
         buttons[i].setPosition(x, y);
     }
 
+        // КНОПКА TRY AGAIN
+    sf::RectangleShape tryAgainButton(sf::Vector2f(150, 50));
+    tryAgainButton.setFillColor(sf::Color(70, 130, 180));
+    tryAgainButton.setOutlineColor(sf::Color::White);
+    tryAgainButton.setOutlineThickness(2);
+    tryAgainButton.setPosition(sf::Vector2f(615.f, 420.f));
+
+    sf::Text tryAgainText(font, "Try Again", 24);
+    tryAgainText.setFillColor(sf::Color::White);
+    tryAgainText.setStyle(sf::Text::Bold);
+
+    // ЦЕНТРИРОВАНИЕ ТЕКСТА НА КНОПКЕ 
+    sf::FloatRect textBounds = tryAgainText.getLocalBounds();
+    tryAgainText.setOrigin(sf::Vector2f(
+        textBounds.position.x + textBounds.size.x / 2.f,
+        textBounds.position.y + textBounds.size.y / 2.f
+    ));
+    tryAgainText.setPosition(sf::Vector2f(
+        tryAgainButton.getPosition().x + tryAgainButton.getSize().x / 2.f,
+        tryAgainButton.getPosition().y + tryAgainButton.getSize().y / 2.f + 5.f  // +5 для визуального центра
+    ));
+
+    // Функция перезапуска игры
+    auto restartGame = [&]() {
+        // Сброс текста
+    resultText.setString("");
+    wordResultText.setString("");
+
+    // ОБНОВЛЕНИЕ ПОЗИЦИИ ТЕКСТА TRY AGAIN
+    sf::FloatRect textBounds = tryAgainText.getLocalBounds();
+    tryAgainText.setOrigin(sf::Vector2f(
+        textBounds.position.x + textBounds.size.x / 2.f,
+        textBounds.position.y + textBounds.size.y / 2.f
+    ));
+    tryAgainText.setPosition(sf::Vector2f(
+        tryAgainButton.getPosition().x + tryAgainButton.getSize().x / 2.f,
+        tryAgainButton.getPosition().y + tryAgainButton.getSize().y / 2.f + 5.f
+    ));
+        // Сброс переменных
+        gameFinished = false;
+        mistakesCount = 0;
+        guessedLetters.clear();
+        
+        // Новое слово
+        secretWord = WordList::getRandomWord();
+        std::cout << "Новое слово: " << secretWord << std::endl;
+        
+        if (!secretWord.empty()) {
+            guessedLetters.insert(secretWord[0]);
+        }
+        
+        // Очищаем буквы на экране
+        for (auto& txt : wordLetters) {
+            txt.setString("");
+        }
+        
+        // Показываем первую букву
+        if (!secretWord.empty()) {
+            wordLetters[0].setString(std::string(1, secretWord[0]));
+            sf::FloatRect bounds = wordLetters[0].getLocalBounds();
+            wordLetters[0].setOrigin(sf::Vector2f(
+                bounds.position.x + bounds.size.x / 2.f,
+                bounds.position.y + bounds.size.y / 2.f
+            ));
+            wordLetters[0].setPosition(sf::Vector2f(
+                wordBoxes[0].getPosition().x + wordBoxes[0].getSize().x / 2.f,
+                wordBoxes[0].getPosition().y + wordBoxes[0].getSize().y / 2.f
+            ));
+        }
+        
+        // Сброс виселицы
+        hangmanTexture.loadFromFile("resources/hangman_0.png");
+        hangmanSprite.setTexture(hangmanTexture);
+        float targetHeight = 200.f;
+        float scale = targetHeight / static_cast<float>(hangmanTexture.getSize().y);
+        hangmanSprite.setScale(sf::Vector2f(scale, scale));
+        hangmanSprite.setPosition(sf::Vector2f(580.f, 100.f));
+        
+        // Сброс текста
+        resultText.setString("");
+        wordResultText.setString("");
+        
+        // Включаем кнопки букв
+        for (size_t i = 0; i < buttons.size(); ++i) {
+            if (i != 4) {  // не Exit
+                buttons[i].setEnabled(true);
+                // Восстанавливаем цвета
+                int column = i / 3;
+                if (column % 3 == 0) {
+                    buttons[i].setBackgroundColor(sf::Color(70, 130, 180));
+                    buttons[i].setHoverColor(sf::Color(100, 160, 210));
+                    buttons[i].setPressedColor(sf::Color(50, 100, 150));
+                } else if (column % 3 == 1) {
+                    buttons[i].setBackgroundColor(sf::Color(180, 70, 130));
+                    buttons[i].setHoverColor(sf::Color(210, 100, 160));
+                    buttons[i].setPressedColor(sf::Color(150, 50, 100));
+                } else {
+                    buttons[i].setBackgroundColor(sf::Color(180, 70, 70));
+                    buttons[i].setHoverColor(sf::Color(210, 100, 100));
+                    buttons[i].setPressedColor(sf::Color(150, 50, 50));
+                }
+            }
+        }
+    };
 
 
     // Настройка цветов
@@ -336,6 +440,21 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
         // Обработка событий
         while (auto event = window.pollEvent())
         {
+            // Обработка кнопки Try Again
+            if (gameFinished) {
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                sf::FloatRect buttonBounds = tryAgainButton.getGlobalBounds();
+                
+                if (buttonBounds.contains(static_cast<sf::Vector2f>(mousePos))) {
+                    tryAgainButton.setFillColor(sf::Color(100, 160, 210)); // светлее при наведении
+                    if (event->is<sf::Event::MouseButtonPressed>() && 
+                        event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left) {
+                        restartGame();
+                    }
+                } else {
+                    tryAgainButton.setFillColor(sf::Color(70, 130, 180)); // обычный цвет
+                }
+            }
             if (event->is<sf::Event::Closed>())
             {
                 window.close();
@@ -393,6 +512,10 @@ wordResultText.setPosition(sf::Vector2f(230.f, 295.f));
             window.draw(wordResultText);
         }
 
+        if (gameFinished) {
+            window.draw(tryAgainButton);
+            window.draw(tryAgainText);
+        }
         // Отображение
         window.display();
     }
